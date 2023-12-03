@@ -8,7 +8,7 @@ pub fn part1() {
     let input_str = include_str!("./real_input.txt");
 
     let output = input_str
-        .split("\n").filter_map(| line | {
+        .split("\n").filter_map(| line: &str | {
             let (game_str, sets_str) = {
                 let mut line_split = line.split(": ");
                 (line_split.next().unwrap(), line_split.next().unwrap())
@@ -37,7 +37,7 @@ pub fn part1() {
             });
 
             if is_game_valid {Some(game_id)} else {None}
-        }).reduce(|acc, curr| acc + curr).unwrap();
+        }).sum::<i32>();
 
     dbg!(output);
 }
