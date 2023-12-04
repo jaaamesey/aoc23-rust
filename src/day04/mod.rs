@@ -53,17 +53,10 @@ pub fn part2() {
             .filter(|num| winning_numbers.clone().any(|n| n == *num))
             .count();
 
-        while num_cards_left[i] > 0 {
-            total_scratchcards += 1;
-
-            let mut cards_to_copy = num_matches;
-
-            num_cards_left[i] -= 1;
-
-            while cards_to_copy > 0 {
-                num_cards_left[i + cards_to_copy] += 1;
-                cards_to_copy -= 1;
-            }
+        let mut iterator = 1;
+        while iterator <= num_matches {
+            num_cards_left[iterator + i] += num_cards_left[i];
+            iterator += 1;
         }
     });
     dbg!(total_scratchcards);
@@ -98,4 +91,39 @@ pub fn _part1_andrew() {
             return points + line_points;
         });
     dbg!(output);
+}
+
+pub fn _part2_andrew() {
+    let lines: Vec<_> = include_str!("./real_input.txt").lines().collect();
+    let count = lines.len();
+    let mut ticket_vec = vec![1; count];
+    let mut index = 0;
+
+    while index < count {
+        let mut num_matches = 0;
+        let [winners, havers] = lines[index]
+            .split(": ")
+            .nth(1)
+            .unwrap()
+            .split(" | ")
+            .collect::<Vec<_>>()[..]
+        else {
+            todo!()
+        };
+        let win_vec: Vec<_> = winners.trim().split_whitespace().collect();
+        let have_vec: Vec<_> = havers.trim().split_whitespace().collect();
+        for val in have_vec {
+            if win_vec.contains(&val) {
+                num_matches += 1;
+            }
+        }
+        let mut iterator = 1;
+        while iterator <= num_matches {
+            ticket_vec[iterator + index] += ticket_vec[index];
+            iterator += 1;
+        }
+        index += 1;
+    }
+    let answer: i32 = ticket_vec.iter().sum();
+    dbg!(answer);
 }
