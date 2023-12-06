@@ -34,7 +34,7 @@ pub fn part1() {
                 let mut distance_travelled: i64 = 0;
 
                 while elapsed_time <= time_limit {
-                    if elapsed_time <= button_release_time {
+                    if elapsed_time < button_release_time {
                         velocity += 1;
                     } else {
                         distance_travelled += velocity;
@@ -52,4 +52,36 @@ pub fn part1() {
     dbg!(output);
 }
 
-pub fn part2() {}
+pub fn part2() {
+    let mut lines = INPUT.lines();
+    let time_limit = lines
+        .next()
+        .unwrap()
+        .split("Time:")
+        .last()
+        .unwrap()
+        .split_whitespace()
+        .fold("".to_string(), |acc, curr| acc + curr)
+        .parse::<f64>()
+        .unwrap();
+    let record_distance = lines
+        .next()
+        .unwrap()
+        .split("Distance:")
+        .last()
+        .unwrap()
+        .split_whitespace()
+        .fold("".to_string(), |acc, curr| acc + curr)
+        .parse::<f64>()
+        .unwrap();
+
+    let sqrt_b_squared_minus_4ac = (time_limit * time_limit - (-4.0 * -record_distance)).sqrt();
+
+    // "a" is just -1, which makes making a value negative equivalent to dividing by 2a.
+    let negative_intercept = -(-time_limit - sqrt_b_squared_minus_4ac);
+    let positive_intercept = -(-time_limit + sqrt_b_squared_minus_4ac);
+
+    let possible_release_points = (negative_intercept - positive_intercept) as i64 / 2;
+
+    dbg!(possible_release_points);
+}
