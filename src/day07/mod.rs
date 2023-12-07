@@ -13,9 +13,9 @@ enum HandType {
     FiveOfAKind,
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Debug)]
 struct Hand {
-    hand_as_hex: i32,
+    hand_as_hex: String,
     hand_score: i32,
     bid: i32,
 }
@@ -25,24 +25,19 @@ pub fn part1() {
         '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A',
     ];
 
-    fn hand_to_hex(hand: &str) -> i32 {
-        let hex = i32::from_str_radix(
-            hand.chars()
-                .map(|char| {
-                    CARDS_BY_STRENGTH
-                        .iter()
-                        .position(|&card| card == char)
-                        .unwrap()
-                })
-                .fold("".to_string(), |acc: String, curr| {
-                    let hex_digit = &format!("{:X}", curr).to_string();
-                    acc + hex_digit
-                })
-                .as_str(),
-            16,
-        )
-        .unwrap();
-        return hex;
+    fn hand_to_hex(hand: &str) -> String {
+        return hand
+            .chars()
+            .map(|char| {
+                CARDS_BY_STRENGTH
+                    .iter()
+                    .position(|&card| card == char)
+                    .unwrap()
+            })
+            .fold("".to_string(), |acc: String, curr| {
+                let hex_digit = &format!("{:X}", curr).to_string();
+                acc + hex_digit
+            });
     }
 
     let parsed_hands = INPUT.lines().map(|line| -> (&str, i32) {
@@ -79,7 +74,7 @@ pub fn part1() {
         })
         .collect::<Vec<_>>();
 
-    hands.sort_unstable_by(|&a, &b| {
+    hands.sort_unstable_by(|ref a, ref b| {
         if a.hand_score == b.hand_score {
             return a.hand_as_hex.cmp(&b.hand_as_hex);
         }
@@ -89,7 +84,7 @@ pub fn part1() {
     let output = hands
         .iter()
         .enumerate()
-        .map(|(i, &hand)| hand.bid * (i + 1) as i32)
+        .map(|(ref i, ref hand)| hand.bid * (i + 1) as i32)
         .fold(0, |acc, curr| acc + curr);
 
     dbg!(output);
@@ -100,24 +95,19 @@ pub fn part2() {
         'J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A',
     ];
 
-    fn hand_to_hex(hand: &str) -> i32 {
-        let hex = i32::from_str_radix(
-            hand.chars()
-                .map(|char| {
-                    CARDS_BY_STRENGTH
-                        .iter()
-                        .position(|&card| card == char)
-                        .unwrap()
-                })
-                .fold("".to_string(), |acc: String, curr| {
-                    let hex_digit = &format!("{:X}", curr).to_string();
-                    acc + hex_digit
-                })
-                .as_str(),
-            16,
-        )
-        .unwrap();
-        return hex;
+    fn hand_to_hex(hand: &str) -> String {
+        return hand
+            .chars()
+            .map(|char| {
+                CARDS_BY_STRENGTH
+                    .iter()
+                    .position(|&card| card == char)
+                    .unwrap()
+            })
+            .fold("".to_string(), |acc: String, curr| {
+                let hex_digit = &format!("{:X}", curr).to_string();
+                acc + hex_digit
+            });
     }
 
     let parsed_hands = INPUT.lines().map(|line| -> (&str, i32) {
@@ -131,14 +121,13 @@ pub fn part2() {
     let mut hands = parsed_hands
         .map(|(hand, bid)| {
             let mut hand_variants = Vec::<String>::new();
-            hand_variants.push(hand.to_string());
-            for c in hand.chars() {
-                if c != 'J' {
-                    continue;
-                }
+
+            if hand.contains('J') {
                 for replacement_card in CARDS_BY_STRENGTH {
                     hand_variants.push(hand.replace('J', replacement_card.to_string().as_str()));
                 }
+            } else {
+                hand_variants.push(hand.to_string());
             }
 
             let best_hand_type = hand_variants
@@ -170,7 +159,7 @@ pub fn part2() {
         })
         .collect::<Vec<_>>();
 
-    hands.sort_unstable_by(|&a, &b| {
+    hands.sort_unstable_by(|a, b| {
         if a.hand_score == b.hand_score {
             return a.hand_as_hex.cmp(&b.hand_as_hex);
         }
@@ -180,7 +169,7 @@ pub fn part2() {
     let output = hands
         .iter()
         .enumerate()
-        .map(|(i, &hand)| hand.bid * (i + 1) as i32)
+        .map(|(ref i, hand)| hand.bid * (i + 1) as i32)
         .fold(0, |acc, curr| acc + curr);
 
     dbg!(output);
