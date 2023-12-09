@@ -3,10 +3,10 @@ use std::collections::VecDeque;
 const INPUT: &str = include_str!("./real_input.txt");
 
 pub fn part1() {
-    fn get_diffs(input: &Vec<i64>) -> Vec<i64> {
+    fn get_diffs(input: &Vec<i32>) -> Vec<i32> {
         let mut output_diffs = Vec::new();
         for i in 1..input.len() {
-            let diff = input[i] - input[i - 1].clone();
+            let diff = input[i] - input[i - 1];
             output_diffs.push(diff);
         }
         return output_diffs;
@@ -14,8 +14,8 @@ pub fn part1() {
     
     let output = INPUT.lines().fold(0, |acc, line| {
         let mut stack = {
-            let initial_numbers = line.split_whitespace().map(|s| s.parse::<i64>().unwrap()).collect::<Vec<_>>();
-            let mut stack = Vec::<Vec<i64>>::new();
+            let initial_numbers = line.split_whitespace().map(|s| s.parse::<i32>().unwrap()).collect::<Vec<_>>();
+            let mut stack = Vec::<Vec<i32>>::new();
             stack.push(initial_numbers);
             stack
         };
@@ -41,10 +41,10 @@ pub fn part1() {
 }
 
 pub fn part2() {
-    fn get_diffs(input: &VecDeque<i64>) -> VecDeque<i64> {
+    fn get_diffs(input: &VecDeque<i32>) -> VecDeque<i32> {
         let mut output_diffs = VecDeque::new();
         for i in 1..input.len() {
-            let diff = input[i] - input[i - 1].clone();
+            let diff = input[i] - input[i - 1];
             output_diffs.push_back(diff);
         }
         return output_diffs;
@@ -52,8 +52,8 @@ pub fn part2() {
     
     let output = INPUT.lines().fold(0, |acc, line| {
         let mut stack = {
-            let initial_numbers = line.split_whitespace().map(|s| s.parse::<i64>().unwrap()).collect::<VecDeque<_>>();
-            let mut stack = Vec::<VecDeque<i64>>::new();
+            let initial_numbers = line.split_whitespace().map(|s| s.parse::<i32>().unwrap()).collect::<VecDeque<_>>();
+            let mut stack = Vec::<VecDeque<i32>>::new();
             stack.push(initial_numbers);
             stack
         };
