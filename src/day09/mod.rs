@@ -1,5 +1,46 @@
-const INPUT: &str = include_str!("./test_input.txt");
+const INPUT: &str = include_str!("./real_input.txt");
 
-pub fn part1() {}
+pub fn part1() {
+    let output = INPUT.lines().fold(0, |acc, line| {
+        let mut stack = {
+            let initial_numbers = line.split_whitespace().map(|s| s.parse::<i64>().unwrap()).collect::<Vec<_>>();
+            let mut stack = Vec::<Vec<i64>>::new();
+            stack.push(initial_numbers);
+            stack
+        };
+
+        while !stack.last().unwrap().iter().all(|&n| n == 0) {
+            stack.push(get_diffs(&stack.last().unwrap()));
+        }
+
+        (stack.last_mut().unwrap()).push(0);
+
+        while stack.len() > 1 {
+            let &last_item = stack.pop().unwrap().last().unwrap();
+            let next_line_up = stack.last_mut().unwrap();
+            next_line_up.push(next_line_up.last().unwrap() + last_item);
+        }
+
+        let &next_in_sequence = stack.last().unwrap().last().unwrap();
+        
+        return acc + next_in_sequence;
+    });
+
+    dbg!(output);
+}
 
 pub fn part2() {}
+
+fn get_diffs(input: &Vec<i64>) -> Vec<i64> {
+    let mut output_diffs = Vec::new();
+    for i in 1..input.len() {
+        let diff = input[i] - input[i - 1].clone();
+        output_diffs.push(diff);
+    }
+    return output_diffs;
+}
+
+// fn get_diff(input: &Vec<i64>) -> i64 {
+//     let mut iter = input.iter();
+//     return iter.last().unwrap() - iter.next_back().unwrap();
+// }
