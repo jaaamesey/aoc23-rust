@@ -1,6 +1,6 @@
 use grid::Grid;
 
-const INPUT: &str = include_str!("./test_input.txt");
+const INPUT: &str = include_str!("./real_input.txt");
 
 pub fn part1() {
     let grid = INPUT
@@ -43,22 +43,21 @@ pub fn part1() {
         }
     }
 
-    let mut cursor = (starting_pos.0, starting_pos.1 + 1);
-    let mut last_dir = (0, 1); // HARDCODED
+    let mut last_dir = (-1 as i8, 0 as i8); // HARDCODED
+    let mut cursor = (
+        starting_pos.0 + (last_dir.0 as i32),
+        starting_pos.1 + (last_dir.1 as i32),
+    );
     let mut step_count = 1;
 
     loop {
         let char = grid[(cursor.0 as usize, cursor.1 as usize)];
         let dir_to_move = get_direction(char, last_dir).unwrap();
 
-        dbg!(dir_to_move);
-
         cursor = (
             cursor.0 + (dir_to_move.0 as i32),
             cursor.1 + (dir_to_move.1 as i32),
         );
-
-        dbg!(cursor);
 
         last_dir = dir_to_move;
 
